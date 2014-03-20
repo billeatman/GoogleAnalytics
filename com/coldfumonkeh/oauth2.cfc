@@ -30,11 +30,11 @@
 
 <cffunction name="createTokenStruct" access="private" output="false" hint="create a token structure in the scope specified by property token_storage">
 	<!--- generate the structure name from the client_id so we are not likely to have a name conflict --->
-	<cfif NOT isDefined('#getToken_storage()#.oauth2#getClient_id()#')>
+	<cfif NOT isDefined('#getToken_storage()#.oauth2#hash(getClient_id(), 'MD5')#')>
 		<cfif getToken_storage() EQ 'session'>
-			<cfset session['oauth2#getClient_id()#'] = structNew()>
+			<cfset session['oauth2#hash(getClient_id(), 'MD5')#'] = structNew()>
 		<cfelse>
-			<cfset application['oauth2#getClient_id()#'] = structNew()>		
+			<cfset application['oauth2#hash(getClient_id(), 'MD5')#'] = structNew()>		
 		</cfif>
 				
 		<cfset getTokenStruct().access_token = "">		
@@ -48,9 +48,9 @@
 	
 	<!--- return the token structure --->
 	<cfif getToken_storage() EQ 'session'>
-		<cfreturn session['oauth2#getClient_id()#']>
+		<cfreturn session['oauth2#hash(getClient_id(), 'MD5')#']>
 	<cfelse>
-		<cfreturn application['oauth2#getClient_id()#']>
+		<cfreturn application['oauth2#hash(getClient_id(), 'MD5')#']>
 	</cfif>
 </cffunction>
 
